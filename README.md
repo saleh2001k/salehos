@@ -9,6 +9,19 @@ in React. No emojis, no UI libraries, no backend.
 
 ---
 
+## Showcase
+
+![Desktop — rotating hero title, widgets, dock](docs/screenshots/desktop.jpg)
+
+| | |
+| --- | --- |
+| ![Finder, CV preview, and Contact windows](docs/screenshots/apps.jpg) | ![Arcade with real in-game cover art](docs/screenshots/arcade.jpg) |
+| ![DOOM running in the Arcade](docs/screenshots/doom.jpg) | ![Interactive terminal — neofetch, help, command chips](docs/screenshots/terminal.jpg) |
+
+![System Settings over the terminal — wallpapers, appearance, fonts](docs/screenshots/settings.jpg)
+
+---
+
 ## Stack
 
 | Layer     | Choice                                                      |
@@ -117,24 +130,6 @@ npm run preview   # serve the production build locally
 
 Note: the Contact form only delivers on the deployed Netlify site; locally it
 shows a mailto fallback.
-
-## Deployment
-
-Pushes to `main` trigger `.github/workflows/deploy.yml`: install → type-check +
-build → `netlify deploy --prod`.
-
-One-time setup:
-
-1. Create the site on Netlify (drag-and-drop any build once, or `netlify init`).
-2. In the GitHub repo settings → Secrets and variables → Actions, add:
-   - `NETLIFY_AUTH_TOKEN` — Netlify → User settings → Applications → Personal access tokens
-   - `NETLIFY_SITE_ID` — Netlify → Site configuration → Site information (API ID)
-3. Point the `salehos.com` domain at the site in Netlify → Domain management.
-4. Netlify Forms: after the first deploy, the `contact` form appears under
-   Forms in the Netlify dashboard — enable email notifications there.
-
-`netlify.toml` sets the build command, publish dir, and long-cache headers for
-hashed assets and the game bundles.
 
 ---
 
