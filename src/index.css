@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+@theme {
+  --color-amber: #e8aa42;
+
+  --font-display: "Clash Display", system-ui, sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
+}
+
+/* Surface variables for window chrome, menus, and panels.
+   Light mode flips --color-white so every white-based Tailwind utility
+   (text-white/80, bg-white/10, border-white/15, …) becomes ink-on-paper. */
+:root {
+  --panel: rgb(38 38 43 / 0.92);
+  --win: rgb(31 31 36 / 0.8);
+  --win-dark: rgb(22 22 26 / 0.85);
+  --page: #101013;
+  --editor: #1a1a1e;
+}
+
+:root[data-appearance="light"] {
+  --color-white: #1d1d22;
+  --panel: rgb(246 246 248 / 0.94);
+  --win: rgb(241 241 245 / 0.86);
+  --win-dark: rgb(229 229 234 / 0.92);
+  --page: #f5f5f7;
+  --editor: #ffffff;
+}
+
+/* Islands that stay dark in both modes (terminal, game boards, overlays). */
+:root[data-appearance="light"] .force-dark {
+  --color-white: #ffffff;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+body {
+  @apply bg-[#0c1024] font-sans text-white antialiased;
+}
+
+::selection {
+  background: rgb(42 125 225 / 0.45);
+}
+
+/* Keyboard focus ring — but not on text fields, where the caret is the focus
+   indicator and the ring reads as a highlight box. */
+:focus-visible:not(input):not(textarea):not([contenteditable="true"]) {
+  outline: 2px solid rgb(90 167 242 / 0.9);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+input:focus,
+textarea:focus,
+[contenteditable="true"]:focus {
+  outline: none;
+}
+
+/* 2048 tile spawn/merge pop */
+@keyframes pop {
+  from {
+    transform: scale(0.55);
+  }
+  to {
+    transform: scale(1);
+  }
+}
