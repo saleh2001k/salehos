@@ -22,7 +22,9 @@ jobs:
         run: npm run build
 
       - name: Deploy to Netlify
-        run: npx netlify-cli@latest deploy --prod --dir=dist --message "GitHub Action: ${{ github.sha }}"
+        run: >
+          npx netlify-cli@latest deploy --prod --dir=dist
+          --message "GitHub Action: ${{ github.sha }}"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
