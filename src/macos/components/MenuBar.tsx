@@ -129,7 +129,10 @@ export function MenuBar({
   });
 
   return (
-    <div ref={barRef} className="absolute inset-x-0 top-0 z-[900] h-7">
+    // force-dark: the bar floats over the wallpaper, so its text + scrim stay
+    // light-on-dark in both themes (otherwise light mode inks the text onto its
+    // own dark scrim and it disappears).
+    <div ref={barRef} className="force-dark absolute inset-x-0 top-0 z-[900] h-7">
       {/* Soft scrim: a gradient that fades out below the bar — no blur, no border. */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-[linear-gradient(180deg,rgba(0,0,0,0.5)_0%,rgba(0,0,0,0.28)_40%,transparent_100%)]" />
 

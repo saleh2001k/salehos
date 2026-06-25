@@ -135,6 +135,35 @@ export const projects: Project[] = [
     link: "https://github.com/saleh2001k",
   },
   {
+    title: "MacHarmony",
+    tag: "macOS App",
+    period: "2025",
+    description:
+      "Native SwiftUI storage cleaner for macOS, shipped end-to-end with its own licensing and distribution stack: Stripe checkout, Supabase auth + Postgres + Edge Functions, device-bound licenses with a browser-to-app token handoff, Resend transactional email, and Sparkle in-app auto-updates from GitHub Releases — with zero always-on backend.",
+    tech: ["SwiftUI", "Supabase", "Stripe", "Sparkle", "Netlify"],
+    featured: true,
+  },
+  {
+    title: "react-native-silk-text",
+    tag: "Open Source",
+    period: "2025",
+    description:
+      "Fully-native animated text for React Native on the New Architecture: per-letter animations rendered by SwiftUI on iOS and Jetpack Compose on Android — no JS-thread jank, no Reanimated dependency.",
+    tech: ["React Native", "SwiftUI", "Jetpack Compose", "Native Modules", "Fabric"],
+    featured: true,
+    link: "https://github.com/saleh2001k/react-native-silk-text",
+  },
+  {
+    title: "react-native-parallax-flow",
+    tag: "Open Source",
+    period: "2025",
+    description:
+      "Tiny, dependency-light parallax ScrollView for React Native — header parallax, pull-to-zoom, and a body that slides over the header. Fully style-prop driven, powered by Reanimated.",
+    tech: ["React Native", "Reanimated", "Parallax", "iOS", "Android"],
+    featured: false,
+    link: "https://github.com/saleh-ayman/react-native-parallax-flow",
+  },
+  {
     title: "Balsam United",
     tag: "Mobile App",
     period: "03 – 10/2025",

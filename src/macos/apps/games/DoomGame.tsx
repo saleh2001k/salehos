@@ -12,3 +12,17 @@ export function DosGame({ bundle }: { bundle: string }) {
     </div>
   );
 }
+
+/** Console/arcade titles emulated by the Internet Archive's in-browser player. */
+export function EmbedGame({ id, title }: { id: string; title: string }) {
+  return (
+    <div className="h-full w-full bg-black">
+      <iframe
+        src={`https://archive.org/embed/${id}`}
+        title={title}
+        className="h-full w-full border-0"
+        allow="autoplay; fullscreen; gamepad"
+      />
+    </div>
+  );
+}

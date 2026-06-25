@@ -71,7 +71,7 @@ function StatusWidget() {
 
 export function Widgets() {
   return (
-    <div className="pointer-events-none absolute left-4 top-4 hidden flex-col gap-3 lg:flex">
+    <div className="force-dark pointer-events-none absolute left-4 top-4 hidden flex-col gap-3 lg:flex">
       <ClockWidget />
       <CalendarWidget />
       <StatusWidget />

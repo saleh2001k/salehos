@@ -10,14 +10,16 @@ import {
   Lightbulb,
   MoveHorizontal,
   Skull,
+  Swords,
   Users,
+  Wind,
   Worm,
   type LucideIcon,
 } from "lucide-react";
 import { useState, type ComponentType } from "react";
 import { sfx } from "../lib/sfx";
 import { BreakoutGame } from "./games/BreakoutGame";
-import { DosGame } from "./games/DoomGame";
+import { DosGame, EmbedGame } from "./games/DoomGame";
 import { Game2048 } from "./games/Game2048";
 import { MemoryGame } from "./games/MemoryGame";
 import { MinesweeperGame } from "./games/MinesweeperGame";
@@ -32,6 +34,8 @@ type GameId =
   | "prince"
   | "crystal-caves"
   | "lemmings"
+  | "streetfighter"
+  | "sonic"
   | "snake"
   | "breakout"
   | "2048"
@@ -47,6 +51,12 @@ const DOS_GAMES: Partial<Record<GameId, string>> = {
   prince: "prince",
   "crystal-caves": "crystal-caves",
   lemmings: "lemmings",
+};
+
+/** Console/arcade titles streamed from the Internet Archive's emulator. */
+const EMBED_GAMES: Partial<Record<GameId, string>> = {
+  streetfighter: "SF2_DOS",
+  sonic: "sonic-the-hedgehogtm-classic_202206",
 };
 
 const GAMES: { id: GameId; name: string; blurb: string; Icon: LucideIcon; color: string }[] = [
@@ -77,6 +87,20 @@ const GAMES: { id: GameId; name: string; blurb: string; Icon: LucideIcon; color:
     blurb: "The Tribes. Save the green-haired fools from themselves.",
     Icon: Users,
     color: "#34d058",
+  },
+  {
+    id: "streetfighter",
+    name: "Street Fighter II",
+    blurb: "The World Warrior. Hadouken your way to the top.",
+    Icon: Swords,
+    color: "#f5a623",
+  },
+  {
+    id: "sonic",
+    name: "Sonic the Hedgehog",
+    blurb: "Gotta go fast. The 1991 classic, in your browser.",
+    Icon: Wind,
+    color: "#2a7de1",
   },
   {
     id: "snake",
@@ -164,6 +188,10 @@ export function GamesApp() {
           <div className="min-h-0 flex-1">
             <DosGame bundle={DOS_GAMES[current.id]!} />
           </div>
+        ) : EMBED_GAMES[current.id] ? (
+          <div className="min-h-0 flex-1">
+            <EmbedGame id={EMBED_GAMES[current.id]!} title={current.name} />
+          </div>
         ) : (
         <div className="flex min-h-0 flex-1 overflow-auto p-2 sm:p-5">
           {/* m-auto centers the board; force-dark keeps boards/overlays dark in
@@ -193,7 +221,7 @@ export function GamesApp() {
         <div className="pointer-events-none absolute -left-8 top-6 h-32 w-32 rounded-full bg-[#2a7de1]/20 blur-3xl" />
         <h2 className="relative font-display text-2xl font-semibold text-white">Arcade</h2>
         <p className="relative mt-1 text-[13px] text-white/55">
-          {GAMES.length} games — four DOS classics and eight homemade. Sound on.
+          {GAMES.length} games — retro classics and homemade originals. Sound on.
         </p>
       </div>
 
