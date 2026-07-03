@@ -24,6 +24,7 @@ import {
   skillGroups,
 } from "../../data/content";
 import { XIcon } from "../components/AppIcons";
+import { LazyMedia } from "../components/LazyMedia";
 
 function Reveal({
   children,
@@ -108,12 +109,18 @@ export function SafariApp() {
           <motion.div style={{ y: heroY, opacity: heroOpacity }} className="pt-16 text-center">
             <motion.div
               style={{ scale: avatarScale }}
-              className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-[linear-gradient(135deg,#e8aa42_0%,#a8690f_100%)] font-display text-3xl font-semibold text-[#101013] shadow-[0_12px_40px_rgba(232,170,66,0.35)]"
+              className="mx-auto h-24 w-24 overflow-hidden rounded-full border-2 border-[#e8aa42]/60 shadow-[0_12px_40px_rgba(232,170,66,0.35)]"
               initial={{ scale: 0.6, opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ type: "spring", stiffness: 200, damping: 18 }}
             >
-              SA
+              <img
+                src={site.photo}
+                alt={site.name}
+                loading="lazy"
+                decoding="async"
+                className="h-full w-full object-cover"
+              />
             </motion.div>
             <h1 className="mt-6 font-display text-4xl font-semibold tracking-tight text-white">
               {site.name}
@@ -225,7 +232,16 @@ export function SafariApp() {
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             {featured.map((project, index) => (
               <Reveal key={project.title} root={scrollRef} delay={index * 0.07}>
-                <div className="group h-full rounded-xl border border-white/10 bg-white/5 p-4 transition-colors hover:border-[#e8aa42]/40">
+                <div className="group h-full overflow-hidden rounded-xl border border-white/10 bg-white/5 transition-colors hover:border-[#e8aa42]/40">
+                  {project.media?.[0] && (
+                    <div className="aspect-video w-full overflow-hidden border-b border-white/10 bg-black/30">
+                      <LazyMedia
+                        media={project.media[0]}
+                        className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
+                      />
+                    </div>
+                  )}
+                  <div className="p-4">
                   <div className="flex items-baseline justify-between gap-3">
                     <h3 className="font-medium text-white">{project.title}</h3>
                     <span className="shrink-0 text-[11px] text-white/40">{project.tag}</span>
@@ -242,6 +258,7 @@ export function SafariApp() {
                         {tech}
                       </span>
                     ))}
+                  </div>
                   </div>
                 </div>
               </Reveal>

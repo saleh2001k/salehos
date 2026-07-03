@@ -47,6 +47,7 @@ import {
   TextFileGlyph,
 } from "../components/AppIcons";
 import { BootScreen } from "../components/BootScreen";
+import { ExitAlert, useBackGuard } from "../components/ExitAlert";
 import { fs } from "../lib/fs";
 import { useSettings, useWallpaperShuffle } from "../lib/settings";
 import { WALLPAPERS, wallpaperStyle } from "../lib/wallpapers";
@@ -250,6 +251,7 @@ function HomeIcon({
   return (
     <button
       type="button"
+      aria-label={label}
       className="flex w-full flex-col items-center gap-1.5 outline-none"
       style={{ touchAction: "manipulation" }}
       {...pressHandlers(onTap, onLong)}
@@ -281,6 +283,42 @@ function IosAppFrame({
   const dimming = useTransform(dragY, [0, -160], [1, 0.92]);
 
   const startRef = useRef<number | null>(null);
+
+  // Pulling the title bar down slides the whole app with the finger (damped)
+  // and dismisses past the threshold — the sheet gesture everyone tries first.
+  const pullY = useMotionValue(0);
+  const pullStart = useRef<number | null>(null);
+
+  const onBarDown = (event: React.PointerEvent) => {
+    // Leave the close chevron's click alone — pointer capture would eat it.
+    if ((event.target as HTMLElement).closest("button")) return;
+    pullStart.current = event.clientY;
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+  const onBarMove = (event: React.PointerEvent) => {
+    if (pullStart.current === null) return;
+    pullY.set(Math.max(0, (event.clientY - pullStart.current) * 0.55));
+  };
+  const onBarUp = () => {
+    if (pullStart.current === null) return;
+    const passed = pullY.get() > 90;
+    pullStart.current = null;
+    if (passed) {
+      sfx.close();
+      onClose();
+      return;
+    }
+    const settle = () => {
+      const value = pullY.get();
+      if (value < 1) {
+        pullY.set(0);
+        return;
+      }
+      pullY.set(value * 0.72);
+      requestAnimationFrame(settle);
+    };
+    settle();
+  };
 
   const onIndicatorDown = (event: React.PointerEvent) => {
     startRef.current = event.clientY;
@@ -336,9 +374,17 @@ function IosAppFrame({
     >
       <motion.div
         className="flex h-full flex-col overflow-hidden bg-[var(--win-dark)] backdrop-blur-2xl"
-        style={{ scale, borderRadius: radius, opacity: dimming }}
+        style={{ scale, borderRadius: radius, opacity: dimming, y: pullY }}
       >
-        <div className="flex shrink-0 items-center justify-between border-b border-white/10 px-4 pb-2 pt-[max(env(safe-area-inset-top),10px)]">
+        <div
+          className="relative flex shrink-0 items-center justify-between border-b border-white/10 px-4 pb-2 pt-[max(env(safe-area-inset-top),10px)]"
+          style={{ touchAction: "none" }}
+          onPointerDown={onBarDown}
+          onPointerMove={onBarMove}
+          onPointerUp={onBarUp}
+          onPointerCancel={onBarUp}
+        >
+          <span className="absolute left-1/2 top-1.5 h-1 w-9 -translate-x-1/2 rounded-full bg-white/25" />
           <span className="w-8" />
           <span className="text-[15px] font-semibold text-white">{title}</span>
           <button
@@ -387,7 +433,26 @@ export default function IOS() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [booting, setBooting] = useState(true);
+  const [exitAlert, setExitAlert] = useState(false);
   const pullRef = useRef<{ y: number; at: number } | null>(null);
+
+  // Browser back walks the UI stack (search → sheet → app → exit alert)
+  // instead of dumping the visitor out of the site.
+  useBackGuard(() => {
+    if (exitAlert) {
+      setExitAlert(false);
+    } else if (searchOpen) {
+      setSearchOpen(false);
+      setQuery("");
+    } else if (sheet) {
+      setSheet(null);
+    } else if (open) {
+      sfx.close();
+      goHome();
+    } else {
+      setExitAlert(true);
+    }
+  });
 
   useEffect(() => {
     document.title = "Saleh Al-Mashni — Senior Mobile & Full-Stack Engineer";
@@ -607,8 +672,14 @@ export default function IOS() {
           className="mx-auto mt-5 flex items-center gap-3 rounded-2xl border border-white/15 bg-black/25 px-4 py-2.5 backdrop-blur-xl"
           onClick={() => launch("safari")}
         >
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[linear-gradient(135deg,#e8aa42_0%,#a8690f_100%)] font-display text-sm font-semibold text-[#101013]">
-            SA
+          <span className="block h-10 w-10 overflow-hidden rounded-full border border-[#e8aa42]/60">
+            <img
+              src={site.photo}
+              alt={site.name}
+              loading="lazy"
+              decoding="async"
+              className="h-full w-full object-cover"
+            />
           </span>
           <span className="text-left">
             <span className="block text-[13px] font-semibold text-[#fff]">
@@ -678,11 +749,11 @@ export default function IOS() {
             <button
               key={label}
               type="button"
-              className="flex shrink-0 items-center gap-1.5 rounded-full bg-black/25 px-3 py-1.5 backdrop-blur-xl active:bg-black/40"
+              className="flex shrink-0 items-center gap-1.5 rounded-full bg-black/25 px-3.5 py-2 backdrop-blur-xl active:bg-black/40"
               onClick={run}
             >
-              <Icon size={13} style={{ color }} />
-              <span className="text-xs font-medium text-[#fff]/85">
+              <Icon size={14} style={{ color }} />
+              <span className="text-[13px] font-medium text-[#fff]/85">
                 {label}
               </span>
             </button>
@@ -879,6 +950,9 @@ export default function IOS() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Back-press exit confirmation */}
+      <ExitAlert open={exitAlert} variant="ios" onStay={() => setExitAlert(false)} />
 
       <AnimatePresence>
         {booting && <BootScreen onDone={() => setBooting(false)} />}

@@ -11,8 +11,14 @@ const SPECS: [string, string][] = [
 export function AboutApp() {
   return (
     <div className="flex h-full flex-col items-center justify-center gap-5 p-6 text-center">
-      <div className="flex h-24 w-24 items-center justify-center rounded-full bg-[linear-gradient(135deg,#5aa7f2_0%,#2a7de1_60%,#1b3a5c_100%)] font-display text-3xl font-semibold text-white shadow-[0_8px_24px_rgba(42,125,225,0.4)]">
-        SA
+      <div className="h-24 w-24 overflow-hidden rounded-full border-2 border-[#5aa7f2]/60 shadow-[0_8px_24px_rgba(42,125,225,0.4)]">
+        <img
+          src={site.photo}
+          alt={site.name}
+          loading="lazy"
+          decoding="async"
+          className="h-full w-full object-cover"
+        />
       </div>
       <div>
         <h2 className="font-display text-xl font-semibold text-white">{site.name}</h2>

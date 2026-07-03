@@ -6,6 +6,7 @@ export interface NavLink {
 export interface SiteInfo {
   name: string;
   monogram: string;
+  photo: string;
   role: string;
   tagline: string;
   location: string;
@@ -30,6 +31,14 @@ export interface ExperienceItem {
   bullets: string[];
 }
 
+export interface ProjectMedia {
+  type: "image" | "video";
+  src: string;
+  alt: string;
+  /** Poster frame shown before a video loads. */
+  poster?: string;
+}
+
 export interface Project {
   title: string;
   tag: string;
@@ -38,6 +47,7 @@ export interface Project {
   tech: string[];
   featured: boolean;
   link?: string;
+  media?: ProjectMedia[];
 }
 
 export interface SkillGroup {
@@ -59,6 +69,7 @@ export interface Certificate {
 export const site: SiteInfo = {
   name: "Saleh Al-Mashni",
   monogram: "SA.",
+  photo: "/me.webp",
   role: "Senior Mobile & Full-Stack Engineer",
   tagline:
     "I build cross-platform mobile apps and modern web products — from the JavaScript layer down to native iOS & Android code.",
@@ -142,6 +153,17 @@ export const projects: Project[] = [
       "Native SwiftUI storage cleaner for macOS, shipped end-to-end with its own licensing and distribution stack: Stripe checkout, Supabase auth + Postgres + Edge Functions, device-bound licenses with a browser-to-app token handoff, Resend transactional email, and Sparkle in-app auto-updates from GitHub Releases — with zero always-on backend.",
     tech: ["SwiftUI", "Supabase", "Stripe", "Sparkle", "Netlify"],
     featured: true,
+    media: [
+      { type: "image", src: "/projects/macharmony/home.webp", alt: "MacHarmony home dashboard" },
+      { type: "image", src: "/projects/macharmony/scan-history.webp", alt: "MacHarmony scan history" },
+      { type: "image", src: "/projects/macharmony/appuninstaller.webp", alt: "MacHarmony app uninstaller" },
+      { type: "image", src: "/projects/macharmony/nodemodules.webp", alt: "MacHarmony node_modules cleaner" },
+      { type: "image", src: "/projects/macharmony/devicesupport.webp", alt: "MacHarmony iOS device support cleaner" },
+      { type: "image", src: "/projects/macharmony/memory.webp", alt: "MacHarmony memory monitor" },
+      { type: "image", src: "/projects/macharmony/startup.webp", alt: "MacHarmony startup items manager" },
+      { type: "image", src: "/projects/macharmony/health.webp", alt: "MacHarmony system health view" },
+      { type: "image", src: "/projects/macharmony/menubar.webp", alt: "MacHarmony menu bar quick access" },
+    ],
   },
   {
     title: "react-native-silk-text",
@@ -152,6 +174,14 @@ export const projects: Project[] = [
     tech: ["React Native", "SwiftUI", "Jetpack Compose", "Native Modules", "Fabric"],
     featured: true,
     link: "https://github.com/saleh2001k/react-native-silk-text",
+    media: [
+      {
+        type: "video",
+        src: "/projects/silk-text/demo.mp4",
+        poster: "/projects/silk-text/demo-poster.webp",
+        alt: "react-native-silk-text per-letter animation demo",
+      },
+    ],
   },
   {
     title: "react-native-parallax-flow",
@@ -162,6 +192,32 @@ export const projects: Project[] = [
     tech: ["React Native", "Reanimated", "Parallax", "iOS", "Android"],
     featured: false,
     link: "https://github.com/saleh-ayman/react-native-parallax-flow",
+    media: [
+      {
+        type: "video",
+        src: "/projects/parallax/layers.mp4",
+        poster: "/projects/parallax/layers-poster.webp",
+        alt: "Parallax layers scroll demo",
+      },
+      {
+        type: "video",
+        src: "/projects/parallax/profile.mp4",
+        poster: "/projects/parallax/profile-poster.webp",
+        alt: "Profile header parallax demo",
+      },
+      {
+        type: "video",
+        src: "/projects/parallax/magazine.mp4",
+        poster: "/projects/parallax/magazine-poster.webp",
+        alt: "Magazine layout parallax demo",
+      },
+      {
+        type: "video",
+        src: "/projects/parallax/artist.mp4",
+        poster: "/projects/parallax/artist-poster.webp",
+        alt: "Artist page pull-to-zoom parallax demo",
+      },
+    ],
   },
   {
     title: "Balsam United",
@@ -188,6 +244,16 @@ export const projects: Project[] = [
       "Modern finance app: smooth wallet top-ups, cashback incentives, spending insights, shared family wallets.",
     tech: ["React Native", "Fintech", "Payments"],
     featured: false,
+    media: [{ type: "image", src: "/projects/trevi.webp", alt: "Trevi finance app website" }],
+  },
+  {
+    title: "MotorWheels",
+    tag: "We The Makers",
+    description:
+      "Automotive marketplace website with a bilingual EN/AR experience — browse cars, dealer listings, and offers with a responsive, SEO-friendly build.",
+    tech: ["Next.js", "EN/AR RTL", "SEO"],
+    featured: false,
+    media: [{ type: "image", src: "/projects/motorwheels.webp", alt: "MotorWheels marketplace website" }],
   },
   {
     title: "Gomint",

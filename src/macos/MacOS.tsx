@@ -45,6 +45,7 @@ import {
   XIcon,
 } from "./components/AppIcons";
 import { BootScreen } from "./components/BootScreen";
+import { ExitAlert, useBackGuard, useExitIntent } from "./components/ExitAlert";
 import { ContextMenu, type ContextMenuState } from "./components/ContextMenu";
 import { DesktopHero } from "./components/DesktopHero";
 import { DesktopIcon } from "./components/DesktopIcon";
@@ -160,6 +161,18 @@ export default function MacOS() {
   const [band, setBand] = useState<Band | null>(null);
   const [fullscreen, setFullscreen] = useState(false);
   const [booting, setBooting] = useState(true);
+  const [exitAlert, setExitAlert] = useState(false);
+
+  // Browser back peels open overlays first; on a bare desktop it asks before
+  // letting the visitor leave. Mouse darting past the top edge asks once too.
+  useBackGuard(() => {
+    if (exitAlert) setExitAlert(false);
+    else if (spotlightOpen) setSpotlightOpen(false);
+    else if (launchpadOpen) setLaunchpadOpen(false);
+    else if (menu) setMenu(null);
+    else setExitAlert(true);
+  });
+  useExitIntent(() => setExitAlert(true));
 
   useEffect(() => {
     const onChange = () => setFullscreen(Boolean(document.fullscreenElement));
@@ -988,6 +1001,9 @@ export default function MacOS() {
           <span className="text-xs text-white/20">Sleeping — click or press any key to wake</span>
         </button>
       )}
+
+      {/* Back-press / exit-intent confirmation */}
+      <ExitAlert open={exitAlert} variant="mac" onStay={() => setExitAlert(false)} />
 
       {/* Boot screen on load */}
       <AnimatePresence>{booting && <BootScreen onDone={() => setBooting(false)} />}</AnimatePresence>

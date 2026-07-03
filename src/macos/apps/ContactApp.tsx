@@ -48,8 +48,14 @@ export function ContactApp() {
   return (
     <div className="flex h-full flex-col gap-5 overflow-y-auto p-5 sm:flex-row">
       <div className="sm:w-56 sm:shrink-0">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[linear-gradient(135deg,#e8aa42_0%,#a8690f_100%)] font-display text-xl font-semibold text-[#101013]">
-          SA
+        <div className="h-16 w-16 overflow-hidden rounded-full border-2 border-[#e8aa42]/60">
+          <img
+            src={site.photo}
+            alt={site.name}
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-cover"
+          />
         </div>
         <h2 className="mt-3 font-display text-lg font-semibold text-white">{site.name}</h2>
         <p className="text-xs text-white/50">{site.role}</p>

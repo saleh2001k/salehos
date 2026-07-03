@@ -56,7 +56,9 @@ const DOS_GAMES: Partial<Record<GameId, string>> = {
 /** Console/arcade titles streamed from the Internet Archive's emulator. */
 const EMBED_GAMES: Partial<Record<GameId, string>> = {
   streetfighter: "SF2_DOS",
-  sonic: "sonic-the-hedgehogtm-classic_202206",
+  // Previous id was an empty-files placeholder (no ROM, no emulator) — it never
+  // booted. This is the real, emulatable Mega Drive/Genesis ROM.
+  sonic: "Sonic_The_Hedgehog_W_REV00_h5C",
 };
 
 const GAMES: { id: GameId; name: string; blurb: string; Icon: LucideIcon; color: string }[] = [

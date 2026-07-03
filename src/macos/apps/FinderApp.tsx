@@ -11,6 +11,7 @@ import {
   Search,
   Trash2,
   Wrench,
+  X,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -20,8 +21,10 @@ import {
   projects,
   projectsNote,
   skillGroups,
+  type ProjectMedia,
 } from "../../data/content";
 import { FolderGlyph, TextFileGlyph } from "../components/AppIcons";
+import { LazyMedia } from "../components/LazyMedia";
 import { fs, useFs, type FsNode } from "../lib/fs";
 import { sfx } from "../lib/sfx";
 
@@ -36,6 +39,7 @@ const SIDEBAR: { id: FinderSection; label: string; icon: typeof FolderOpen }[] =
 
 function ProjectsPane() {
   const [openProject, setOpenProject] = useState<string | null>(null);
+  const [lightbox, setLightbox] = useState<ProjectMedia | null>(null);
   const index = projects.findIndex((entry) => entry.title === openProject);
   const project = index >= 0 ? projects[index] : undefined;
 
@@ -43,7 +47,7 @@ function ProjectsPane() {
     const prev = projects[(index - 1 + projects.length) % projects.length]!;
     const next = projects[(index + 1) % projects.length]!;
     return (
-      <div className="flex h-full flex-col">
+      <div className="relative flex h-full flex-col">
         {/* Project navigator: back, position, and prev/next stepping */}
         <div className="flex shrink-0 items-center gap-2 border-b border-white/10 px-4 py-2">
           <button
@@ -60,7 +64,7 @@ function ProjectsPane() {
           <button
             type="button"
             aria-label={`Previous: ${prev.title}`}
-            className="rounded-md bg-white/10 p-1 text-white/75 hover:bg-white/20"
+            className="rounded-md bg-white/10 p-2.5 text-white/75 hover:bg-white/20 sm:p-1"
             onClick={() => setOpenProject(prev.title)}
           >
             <ChevronLeft size={15} />
@@ -68,7 +72,7 @@ function ProjectsPane() {
           <button
             type="button"
             aria-label={`Next: ${next.title}`}
-            className="rounded-md bg-white/10 p-1 text-white/75 hover:bg-white/20"
+            className="rounded-md bg-white/10 p-2.5 text-white/75 hover:bg-white/20 sm:p-1"
             onClick={() => setOpenProject(next.title)}
           >
             <ChevronRight size={15} />
@@ -105,6 +109,30 @@ function ProjectsPane() {
             </a>
           )}
 
+          {project.media && project.media.length > 0 && (
+            <>
+              <p className="mt-8 text-[11px] font-semibold uppercase tracking-widest text-white/35">
+                Gallery
+              </p>
+              <div className="mt-2 columns-2 gap-2 *:mb-2 sm:columns-3">
+                {project.media.map((item) => (
+                  <button
+                    key={item.src}
+                    type="button"
+                    aria-label={`Enlarge: ${item.alt}`}
+                    className="block w-full break-inside-avoid overflow-hidden rounded-lg border border-white/10 bg-black/30 transition-colors hover:border-[#5aa7f2]/60"
+                    onClick={() => setLightbox(item)}
+                  >
+                    <LazyMedia
+                      media={item}
+                      className={`w-full ${item.type === "image" ? "max-h-64 object-cover object-top" : "h-auto"}`}
+                    />
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+
           {/* Jump straight to any other project */}
           <p className="mt-8 text-[11px] font-semibold uppercase tracking-widest text-white/35">
             More projects
@@ -116,7 +144,7 @@ function ProjectsPane() {
                 <button
                   key={entry.title}
                   type="button"
-                  className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs text-white/75 hover:border-[#5aa7f2]/60 hover:text-white"
+                  className="rounded-full border border-white/15 bg-white/5 px-3.5 py-2 text-xs text-white/75 hover:border-[#5aa7f2]/60 hover:text-white sm:px-3 sm:py-1"
                   onClick={() => setOpenProject(entry.title)}
                 >
                   {entry.title}
@@ -124,6 +152,33 @@ function ProjectsPane() {
               ))}
           </div>
         </div>
+
+        {lightbox && (
+          <div
+            className="absolute inset-0 z-20 flex flex-col bg-black/85 backdrop-blur-sm"
+            role="dialog"
+            aria-label={lightbox.alt}
+            onClick={() => setLightbox(null)}
+          >
+            <div className="flex shrink-0 items-center gap-2 px-4 py-2">
+              <span className="min-w-0 truncate text-xs text-white/60">{lightbox.alt}</span>
+              <button
+                type="button"
+                aria-label="Close preview"
+                className="ml-auto rounded-md bg-white/10 p-2.5 text-white/80 hover:bg-white/20 sm:p-1.5"
+                onClick={() => setLightbox(null)}
+              >
+                <X size={15} />
+              </button>
+            </div>
+            <div
+              className="min-h-0 flex-1 overflow-y-auto px-4 pb-4"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <LazyMedia media={lightbox} className="mx-auto w-full max-w-2xl rounded-lg" />
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -517,7 +572,7 @@ export function FinderApp({
           <div className="flex gap-1 border-b border-white/10 p-2">
             <button
               type="button"
-              className={`rounded-full px-3 py-1 text-xs ${
+              className={`rounded-full px-3.5 py-2 text-[13px] ${
                 view === "fs" ? "bg-white/20 text-white" : "text-white/60"
               }`}
               onClick={() => openFs(null)}
@@ -528,7 +583,7 @@ export function FinderApp({
               <button
                 key={id}
                 type="button"
-                className={`rounded-full px-3 py-1 text-xs ${
+                className={`rounded-full px-3.5 py-2 text-[13px] ${
                   section === id ? "bg-white/20 text-white" : "text-white/60"
                 }`}
                 onClick={() => setView(id)}
