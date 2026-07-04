@@ -47,7 +47,7 @@ import {
   TextFileGlyph,
 } from "../components/AppIcons";
 import { BootScreen } from "../components/BootScreen";
-import { ExitAlert, useBackGuard } from "../components/ExitAlert";
+import { LeaveGuard, leaveSite, useBackGuard } from "../components/LeaveGuard";
 import { fs } from "../lib/fs";
 import { useSettings, useWallpaperShuffle } from "../lib/settings";
 import { WALLPAPERS, wallpaperStyle } from "../lib/wallpapers";
@@ -433,15 +433,12 @@ export default function IOS() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [booting, setBooting] = useState(true);
-  const [exitAlert, setExitAlert] = useState(false);
   const pullRef = useRef<{ y: number; at: number } | null>(null);
 
-  // Browser back walks the UI stack (search → sheet → app → exit alert)
-  // instead of dumping the visitor out of the site.
+  // Browser back walks the UI stack (search → sheet → app) before it is
+  // allowed to actually leave the site from the home screen.
   useBackGuard(() => {
-    if (exitAlert) {
-      setExitAlert(false);
-    } else if (searchOpen) {
+    if (searchOpen) {
       setSearchOpen(false);
       setQuery("");
     } else if (sheet) {
@@ -450,7 +447,7 @@ export default function IOS() {
       sfx.close();
       goHome();
     } else {
-      setExitAlert(true);
+      leaveSite();
     }
   });
 
@@ -951,8 +948,8 @@ export default function IOS() {
         )}
       </AnimatePresence>
 
-      {/* Back-press exit confirmation */}
-      <ExitAlert open={exitAlert} variant="ios" onStay={() => setExitAlert(false)} />
+      {/* Confirm before external links / mail / phone leave the site */}
+      <LeaveGuard variant="ios" />
 
       <AnimatePresence>
         {booting && <BootScreen onDone={() => setBooting(false)} />}

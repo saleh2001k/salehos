@@ -45,7 +45,7 @@ import {
   XIcon,
 } from "./components/AppIcons";
 import { BootScreen } from "./components/BootScreen";
-import { ExitAlert, useBackGuard, useExitIntent } from "./components/ExitAlert";
+import { LeaveGuard, leaveSite, useBackGuard } from "./components/LeaveGuard";
 import { ContextMenu, type ContextMenuState } from "./components/ContextMenu";
 import { DesktopHero } from "./components/DesktopHero";
 import { DesktopIcon } from "./components/DesktopIcon";
@@ -161,18 +161,14 @@ export default function MacOS() {
   const [band, setBand] = useState<Band | null>(null);
   const [fullscreen, setFullscreen] = useState(false);
   const [booting, setBooting] = useState(true);
-  const [exitAlert, setExitAlert] = useState(false);
-
-  // Browser back peels open overlays first; on a bare desktop it asks before
-  // letting the visitor leave. Mouse darting past the top edge asks once too.
+  // Browser back peels open overlays first; with nothing left to close it
+  // leaves the site like a normal back press would.
   useBackGuard(() => {
-    if (exitAlert) setExitAlert(false);
-    else if (spotlightOpen) setSpotlightOpen(false);
+    if (spotlightOpen) setSpotlightOpen(false);
     else if (launchpadOpen) setLaunchpadOpen(false);
     else if (menu) setMenu(null);
-    else setExitAlert(true);
+    else leaveSite();
   });
-  useExitIntent(() => setExitAlert(true));
 
   useEffect(() => {
     const onChange = () => setFullscreen(Boolean(document.fullscreenElement));
@@ -1002,8 +998,8 @@ export default function MacOS() {
         </button>
       )}
 
-      {/* Back-press / exit-intent confirmation */}
-      <ExitAlert open={exitAlert} variant="mac" onStay={() => setExitAlert(false)} />
+      {/* Confirm before external links / mail / phone leave the site */}
+      <LeaveGuard variant="mac" />
 
       {/* Boot screen on load */}
       <AnimatePresence>{booting && <BootScreen onDone={() => setBooting(false)} />}</AnimatePresence>
