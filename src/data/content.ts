@@ -16,6 +16,9 @@ export interface SiteInfo {
   github: string;
   linkedin: string;
   x: string;
+  whatsapp: string;
+  cv: string;
+  cvPreview: string;
   footerLine: string;
 }
 
@@ -28,6 +31,7 @@ export interface ExperienceItem {
   company: string;
   role: string;
   period: string;
+  location?: string;
   bullets: string[];
 }
 
@@ -37,6 +41,8 @@ export interface ProjectMedia {
   alt: string;
   /** Poster frame shown before a video loads. */
   poster?: string;
+  /** Full-page capture: scroll it instead of cropping. */
+  tall?: boolean;
 }
 
 export interface Project {
@@ -70,9 +76,9 @@ export const site: SiteInfo = {
   name: "Saleh Al-Mashni",
   monogram: "SA.",
   photo: "/me.webp",
-  role: "Senior Mobile & Full-Stack Engineer",
+  role: "Senior React Native & Frontend Developer",
   tagline:
-    "I build cross-platform mobile apps and modern web products — from the JavaScript layer down to native iOS & Android code.",
+    "I build the interface you touch, the native code underneath, and the systems that hold it together.",
   location: "Jordan",
   email: "saleh.almashnie@gmail.com",
   phone: "+962 79 971 4069",
@@ -80,7 +86,10 @@ export const site: SiteInfo = {
   github: "https://github.com/saleh2001k",
   linkedin: "https://www.linkedin.com/in/saleh-almashni",
   x: "https://x.com/saleh_almashne",
-  footerLine: "© 2026 Saleh Al-Mashni · Built with React, Three.js & too much coffee",
+  whatsapp: "https://wa.me/962799714069?text=Hi%20Saleh%2C%20I%20found%20your%20portfolio%20and%20wanted%20to%20reach%20out.",
+  cv: "/Saleh_Al-Mashni_Resume_2026.pdf",
+  cvPreview: "/cv/page-1.webp",
+  footerLine: "© 2026 Saleh Al-Mashni. Thoughtfully built in Jordan.",
 };
 
 export const navLinks: NavLink[] = [
@@ -102,21 +111,35 @@ export const about: AboutContent = {
 
 export const experience: ExperienceItem[] = [
   {
+    company: "TGC",
+    role: "Senior React Native & Frontend Developer",
+    period: "08/2026 – Present",
+    location: "Amman, Jordan",
+    bullets: [
+      "Develop Aleena across React Native mobile, a Next.js storefront, and an admin dashboard in a shared Turborepo monorepo.",
+      "Build native iOS and Android integrations for animated launch sequences, PassKit Apple Pay, camera hardware controls, seasonal app icons, and Android predictive-back gestures.",
+      "Implement Arabic/English runtime direction changes, Shopify customer authentication with PKCE, and synchronous MMKV-backed query-cache hydration for the first render.",
+      "Develop shared storefront, UI, theme, localization, and configuration packages; reuse storefront components in the dashboard's live CMS preview.",
+    ],
+  },
+  {
     company: "Digital Gates",
     role: "Mobile Developer",
-    period: "06/2025 – Present",
+    period: "06/2025 – 08/2026",
+    location: "Amman, Jordan",
     bullets: [
-      "Developed the Speedy Hire UK cross-platform app in React Native, owning architecture from setup through production release on App Store and Google Play",
-      "Built custom native modules bridging React Native to native iOS and Android APIs — advanced splash screen behaviour, native-layer animations, platform-specific enhancements",
-      "Engineered complex animation systems with Reanimated and Gesture Handler: physics-based gestures, shared element transitions, orchestrated sequences",
-      "Integrated third-party native SDKs into the build pipeline, configuring Xcode and Gradle for stable dependency resolution",
-      "Implemented secure authentication flows and API integrations; translated Figma designs into pixel-perfect responsive UI",
+      "Developed the Speedy Hire mobile app (iOS and Android) in React Native and TypeScript for a UK equipment-hire client, from initial project setup through App Store and Google Play releases.",
+      "Delivered core customer features: live order tracking on Google Maps, off-hire and collection requests, invoices and payments, depot finder, and checkout with address management.",
+      "Built QR and barcode asset inspection with VisionCamera and custom camera controls, plus biometric sign-in and OAuth (Azure AD B2C) token management stored in Keychain.",
+      "Wrote native iOS and Android modules for splash-screen choreography and in-app restart; added a dark theme with Unistyles and native theme transitions; upgraded React Native 0.81 to 0.85.",
+      "Persisted server state with TanStack Query, implemented deep linking, and automated builds with Azure Pipelines and fastlane.",
     ],
   },
   {
     company: "We The Makers",
     role: "Full-Stack Software Developer",
     period: "11/2023 – 06/2025",
+    location: "Amman, Jordan",
     bullets: [
       "Led and mentored a mobile team: code reviews, branching strategy, PR standards, architectural decisions across concurrent projects",
       "Built and shipped scalable React Native and Next.js apps from concept to production — complex state management, offline support, push notifications, bilingual RTL/LTR UI",
@@ -128,6 +151,7 @@ export const experience: ExperienceItem[] = [
     company: "ASAC (Abdul Aziz Al Ghurair School of Advanced Computing)",
     role: "Full-Stack JavaScript Trainee",
     period: "12/2022 – 10/2023",
+    location: "Amman, Jordan",
     bullets: [
       "Full-stack development with JavaScript: Express.js backend, React.js frontend",
     ],
@@ -135,6 +159,64 @@ export const experience: ExperienceItem[] = [
 ];
 
 export const projects: Project[] = [
+  {
+    title: "Aleena",
+    tag: "TGC · Mobile & Web",
+    period: "08/2026 – Present",
+    description: "Commerce across a React Native app, Next.js storefront, and admin dashboard. My work spans native launch choreography, PassKit checkout, camera hardware, live RTL, cached first renders, and shared storefront components that also power the CMS preview.",
+    tech: ["React Native", "Next.js", "Swift", "Kotlin", "Turborepo", "Shopify"],
+    featured: true,
+  },
+  {
+    title: "Speedy Hire",
+    tag: "Digital Gates · Mobile app",
+    period: "06/2025 – 08/2026",
+    description:
+      "The customer mobile app for a UK equipment-hire company, on iOS and Android. Order tracking on live maps, off-hire and collections, invoices and payments, QR asset inspection, biometric sign-in, and native splash and theme work.",
+    tech: ["React Native", "TypeScript", "VisionCamera", "Google Maps", "TanStack Query", "Azure Pipelines"],
+    featured: true,
+  },
+  {
+    title: "react-native-nitro-theme-transition",
+    tag: "Open Source",
+    description: "Sixteen native theme-change effects built on Nitro Modules, using Core Animation on iOS and platform animators on Android. Snapshot transitions without Skia or a JavaScript animation dependency.",
+    tech: ["Nitro Modules", "Swift", "Kotlin", "Core Animation"],
+    featured: true,
+    link: "https://github.com/saleh2001k/react-native-nitro-theme-transition",
+  },
+  {
+    title: "react-native-rtl",
+    tag: "Open Source",
+    description: "Switch live Fabric surfaces and native navigation chrome between LTR and RTL without restarting the app or remounting its screens.",
+    tech: ["Fabric", "Objective-C", "Kotlin", "RTL"],
+    featured: true,
+    link: "https://github.com/saleh2001k/react-native-rtl",
+  },
+  {
+    title: "react-native-splash-flow",
+    tag: "Open Source",
+    description: "Native animated splash screens with an Expo config plugin, Android SplashScreen API, custom SwiftUI launch views, and coordinated exit animations.",
+    tech: ["SwiftUI", "Kotlin", "TurboModule", "Expo"],
+    featured: false,
+    link: "https://github.com/saleh2001k/react-native-splash-flow",
+  },
+  {
+    title: "react-native-pull-flow",
+    tag: "Open Source",
+    description: "Headless pull-to-refresh with a UI-thread gesture engine and customizable indicators. Preserves native iOS bounce and list virtualization.",
+    tech: ["Reanimated", "Gesture Handler", "React Native"],
+    featured: false,
+    link: "https://github.com/saleh2001k/react-native-pull-flow",
+  },
+  {
+    title: "SalehOS",
+    tag: "Interactive Experiment",
+    description: "A working desktop in your browser: draggable windows, a persistent virtual filesystem, terminal, settings, and arcade. A companion iOS-style interface adapts the experience to phones.",
+    tech: ["React", "TypeScript", "Motion", "Web Audio"],
+    featured: true,
+    link: "/os",
+    media: [{ type: "image", src: "/projects/salehos.jpg", alt: "SalehOS interactive desktop" }],
+  },
   {
     title: "NativeTide",
     tag: "Open Source",
@@ -168,7 +250,7 @@ export const projects: Project[] = [
   {
     title: "react-native-silk-text",
     tag: "Open Source",
-    period: "2025",
+    period: "06/2026",
     description:
       "Fully-native animated text for React Native on the New Architecture: per-letter animations rendered by SwiftUI on iOS and Jetpack Compose on Android — no JS-thread jank, no Reanimated dependency.",
     tech: ["React Native", "SwiftUI", "Jetpack Compose", "Native Modules", "Fabric"],
@@ -186,12 +268,12 @@ export const projects: Project[] = [
   {
     title: "react-native-parallax-flow",
     tag: "Open Source",
-    period: "2025",
+    period: "07/2026",
     description:
       "Tiny, dependency-light parallax ScrollView for React Native — header parallax, pull-to-zoom, and a body that slides over the header. Fully style-prop driven, powered by Reanimated.",
     tech: ["React Native", "Reanimated", "Parallax", "iOS", "Android"],
     featured: false,
-    link: "https://github.com/saleh-ayman/react-native-parallax-flow",
+    link: "https://github.com/saleh2001k/react-native-parallax-flow",
     media: [
       {
         type: "video",
@@ -222,7 +304,7 @@ export const projects: Project[] = [
   {
     title: "Balsam United",
     tag: "Mobile App",
-    period: "03 – 10/2025",
+    period: "09 – 10/2025",
     description:
       "Rebuilt the entire React Native app from the ground up, delivering production-ready architecture in 3 weeks against a projected 6-month timeline. Role-based flows, real-time chat, health integrations, secure REST APIs, full EN/AR RTL. Shipped to both stores.",
     tech: ["React Native", "Real-time chat", "Health APIs", "EN/AR RTL"],
@@ -244,7 +326,7 @@ export const projects: Project[] = [
       "Modern finance app: smooth wallet top-ups, cashback incentives, spending insights, shared family wallets.",
     tech: ["React Native", "Fintech", "Payments"],
     featured: false,
-    media: [{ type: "image", src: "/projects/trevi.webp", alt: "Trevi finance app website" }],
+    media: [{ type: "image", src: "/projects/trevi.webp", alt: "Trevi finance app website", tall: true }],
   },
   {
     title: "MotorWheels",
@@ -253,7 +335,7 @@ export const projects: Project[] = [
       "Automotive marketplace website with a bilingual EN/AR experience — browse cars, dealer listings, and offers with a responsive, SEO-friendly build.",
     tech: ["Next.js", "EN/AR RTL", "SEO"],
     featured: false,
-    media: [{ type: "image", src: "/projects/motorwheels.webp", alt: "MotorWheels marketplace website" }],
+    media: [{ type: "image", src: "/projects/motorwheels.webp", alt: "MotorWheels marketplace website", tall: true }],
   },
   {
     title: "Gomint",
@@ -277,6 +359,10 @@ export const projectsNote = "+8 private projects across web and mobile.";
 
 export const skillGroups: SkillGroup[] = [
   {
+    label: "Native engineering",
+    skills: ["Swift", "Kotlin", "Objective-C", "SwiftUI", "Jetpack Compose", "Fabric", "Nitro Modules", "PassKit"],
+  },
+  {
     label: "Mobile",
     skills: [
       "React Native",
@@ -290,7 +376,7 @@ export const skillGroups: SkillGroup[] = [
   },
   {
     label: "Frontend",
-    skills: ["React", "Next.js", "TypeScript", "Zustand", "i18n / RTL", "Tailwind CSS"],
+    skills: ["React", "Next.js", "TypeScript", "Turborepo", "TanStack Query", "Zustand", "i18n / RTL", "Tailwind CSS"],
   },
   {
     label: "DevOps & Cloud",

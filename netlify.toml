@@ -2,6 +2,17 @@
   command = "npm run build"
   publish = "dist"
 
+# The résumé and the retained SalehOS project share the React entry point.
+[[redirects]]
+  from = "/os"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/os/"
+  to = "/index.html"
+  status = 200
+
 # Long-cache immutable assets (hashed filenames) and the big game bundles.
 [[headers]]
   for = "/assets/*"

@@ -4,20 +4,36 @@
     <meta charset="UTF-8" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
-    <link rel="icon" type="image/png" href="/icons/finder.png" />
-    <link rel="apple-touch-icon" href="/icons/finder.png" />
-    <meta name="theme-color" content="#0c1024" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-    <title>Saleh Al-Mashni — Senior Mobile & Full-Stack Engineer</title>
+    <meta name="theme-color" content="#f4f4f3" />
+    <script>
+      // Résumé theme before first paint: saved choice, else the system's.
+      (function () {
+        if (/^\/os\/?$/.test(location.pathname)) return;
+        var t;
+        try { t = localStorage.getItem("portfolio-theme"); } catch (e) {}
+        if (t !== "light" && t !== "dark")
+          t = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        document.documentElement.dataset.theme = t;
+        document.documentElement.style.colorScheme = t;
+        if (t === "dark") document.querySelector('meta[name="theme-color"]').setAttribute("content", "#0a0a0a");
+      })();
+    </script>
+
+    <title>Saleh Al-Mashni — Senior React Native & Frontend Developer</title>
     <meta
       name="description"
-      content="Saleh Al-Mashni is a senior mobile and full-stack engineer in Jordan, building cross-platform React Native apps, custom native iOS & Android modules, and modern web products."
+      content="Saleh Al-Mashni is a senior React Native and frontend developer in Amman, Jordan. Native iOS and Android engineering, the Aleena and Speedy Hire apps, and six open-source React Native packages."
     />
 
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Saleh Al-Mashni — Senior Mobile & Full-Stack Engineer" />
+    <meta
+      property="og:title"
+      content="Saleh Al-Mashni — Senior React Native & Frontend Developer"
+    />
     <meta
       property="og:description"
       content="Cross-platform React Native apps, custom native modules, and modern web products — from the JavaScript layer down to native iOS & Android code."
@@ -31,30 +47,47 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content="https://salehos.com/og.png" />
     <link rel="canonical" href="https://salehos.com/" />
-    <meta name="twitter:title" content="Saleh Al-Mashni — Senior Mobile & Full-Stack Engineer" />
+    <meta
+      name="twitter:title"
+      content="Saleh Al-Mashni — Senior React Native & Frontend Developer"
+    />
     <meta
       name="twitter:description"
       content="Cross-platform React Native apps, custom native modules, and modern web products."
     />
-
-    <link rel="preconnect" href="https://api.fontshare.com" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="preload" href="/projects/aleena/atelier.jpg" as="image" fetchpriority="high" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Saleh Al-Mashni",
+        "jobTitle": "Senior React Native & Frontend Developer",
+        "url": "https://salehos.com/",
+        "image": "https://salehos.com/me.webp",
+        "email": "mailto:saleh.almashnie@gmail.com",
+        "address": { "@type": "PostalAddress", "addressLocality": "Amman", "addressCountry": "JO" },
+        "worksFor": { "@type": "Organization", "name": "TGC" },
+        "knowsAbout": ["React Native", "TypeScript", "Swift", "Kotlin", "Next.js", "iOS", "Android", "Expo"],
+        "sameAs": [
+          "https://github.com/saleh2001k",
+          "https://www.linkedin.com/in/saleh-almashni",
+          "https://x.com/saleh_almashne"
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
-    <!-- Static registration for Netlify Forms; the Contact app posts to it. -->
-    <form name="contact" data-netlify="true" netlify-honeypot="bot-field" hidden>
+    <!-- Static registration for Netlify Forms; the résumé contact form and the OS Contact app post to it. -->
+    <form
+      name="contact"
+      data-netlify="true"
+      netlify-honeypot="bot-field"
+      hidden
+    >
       <input type="text" name="name" />
       <input type="email" name="email" />
+      <input type="text" name="topic" />
       <textarea name="message"></textarea>
       <input name="bot-field" />
     </form>

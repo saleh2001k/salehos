@@ -32,14 +32,14 @@
   --color-white: #ffffff;
 }
 
-html,
-body {
+html[data-experience="os"],
+html[data-experience="os"] body {
   height: 100%;
   overflow: hidden;
   overscroll-behavior: none;
 }
 
-body {
+html[data-experience="os"] body {
   @apply bg-[#0c1024] font-sans text-white antialiased;
 }
 
@@ -55,10 +55,18 @@ body {
   border-radius: 2px;
 }
 
-input:focus,
-textarea:focus,
-[contenteditable="true"]:focus {
+html[data-experience="os"] input:focus,
+html[data-experience="os"] textarea:focus,
+html[data-experience="os"] [contenteditable="true"]:focus {
   outline: none;
+}
+
+.back-to-resume { position: fixed; right: 16px; top: 40px; z-index: 99999; padding: 9px 14px; border-radius: 20px; background: #fff; color: #292a32; font: 600 12px system-ui; box-shadow: 0 2px 16px #0002; }
+.os-loading { padding: 30px; color: white; font: 16px system-ui; }
+.os-loading a { margin-left: 20px; text-decoration: underline; }
+
+@media (max-width: 767px) {
+  .back-to-resume { top: auto; bottom: 110px; }
 }
 
 /* iOS Safari auto-zooms any focused field under 16px — keep phone inputs at
