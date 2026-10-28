@@ -378,7 +378,8 @@ function ThemeDemo() {
   return (
     <div className="demo">
       <div className="demo-stage">
-        <AnimatePresence mode="popLayout" initial={false}>
+        {/* Own presence so the lab's initial={false} does not skip these transitions. */}
+        <AnimatePresence mode="popLayout">
           {recordingOnly ? (
             <motion.div
               key="rec"
