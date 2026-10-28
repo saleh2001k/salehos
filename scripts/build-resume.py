@@ -8,7 +8,6 @@ Design rules (Harvard Office of Career Services format + ATS parsing guidance):
 - bullets start with an action verb, no personal pronouns
 """
 import json
-import shutil
 import sys
 from pathlib import Path
 from xml.sax.saxutils import escape
@@ -93,72 +92,8 @@ def bullets(items):
 
 
 # ---------------------------------------------------------------- content
-experience = [
-    {
-        "company": "TGC",
-        "location": "Amman, Jordan",
-        "role": "Senior React Native & Frontend Developer",
-        "dates": "Aug 2026 – Present",
-        "bullets": [
-            "Develop Aleena, a fashion commerce platform, across a React Native (Expo) mobile app, a Next.js storefront, and an admin dashboard in a shared Turborepo monorepo.",
-            "Build native iOS (Swift) and Android (Kotlin) integrations: Apple Pay with PassKit, animated launch sequences, camera hardware controls, seasonal app icons, and Android predictive-back gestures.",
-            "Implement runtime Arabic/English (RTL/LTR) switching without an app restart, Shopify customer authentication with OAuth PKCE, and MMKV-backed TanStack Query hydration for an instant first render.",
-            "Create five shared packages (storefront, UI, theme, localization, configuration) that also power the dashboard’s live CMS preview.",
-        ],
-    },
-    {
-        "company": "Digital Gates",
-        "location": "Amman, Jordan",
-        "role": "Mobile Developer (React Native)",
-        "dates": "Jun 2025 – Aug 2026",
-        "bullets": [
-            "Developed the Speedy Hire mobile app for iOS and Android in React Native and TypeScript for a UK equipment-hire client, from project setup through App Store and Google Play releases.",
-            "Delivered live order tracking on Google Maps, off-hire and collection requests, invoices and online payments, a depot finder, and checkout with address management.",
-            "Built QR and barcode asset inspection with VisionCamera, biometric login, and Azure AD B2C OAuth with secure token storage.",
-            "Wrote native modules for splash-screen animation and in-app restart, added dark mode with Unistyles, upgraded React Native from 0.81 to 0.85, and automated builds with Azure Pipelines and fastlane.",
-        ],
-    },
-    {
-        "company": "We The Makers",
-        "location": "Amman, Jordan",
-        "role": "Full-Stack Software Developer",
-        "dates": "Nov 2023 – Jun 2025",
-        "bullets": [
-            "Led and mentored the mobile team, setting code-review standards, branching strategy, and architecture decisions across concurrent client projects.",
-            "Shipped React Native and Next.js products in fintech, delivery, loyalty, and automotive with offline support, push notifications, and bilingual Arabic/English RTL interfaces.",
-            "Raised Lighthouse scores with Next.js ISR, image optimization, and bundle analysis; built GitHub Actions CI/CD pipelines for build, test, and deployment.",
-        ],
-    },
-    {
-        "company": "ASAC (Abdul Aziz Al Ghurair School of Advanced Computing)",
-        "location": "Amman, Jordan",
-        "role": "Full-Stack JavaScript Trainee",
-        "dates": "Dec 2022 – Oct 2023",
-        "bullets": [
-            "Built REST APIs with Node.js and Express and front ends with React in an intensive full-stack program.",
-        ],
-    },
-]
-
-projects = [
-    ("react-native-nitro-theme-transition", "https://github.com/saleh2001k/react-native-nitro-theme-transition",
-     "16 native theme-change animations on Nitro Modules (Swift, Kotlin, Core Animation), no Skia needed."),
-    ("react-native-rtl", "https://github.com/saleh2001k/react-native-rtl",
-     "Runtime LTR/RTL switching for Fabric apps and native navigation chrome, with no restart."),
-    ("react-native-silk-text, splash-flow, parallax-flow, pull-flow", "https://github.com/saleh2001k",
-     "Native text animation (SwiftUI, Jetpack Compose), animated splash screens with an Expo plugin, parallax, and pull-to-refresh."),
-    ("Balsam United", None,
-     "Rebuilt a healthcare React Native app in 3 weeks vs. a projected 6 months; shipped to both stores."),
-    ("MacHarmony", None,
-     "SwiftUI macOS app with Stripe, Supabase auth, device-bound licensing, and Sparkle updates."),
-]
-
-skills = [
-    ("Languages", "TypeScript, JavaScript, Swift, Kotlin, Objective-C, HTML, CSS"),
-    ("Mobile", "React Native, Expo, TurboModules, Nitro Modules, Reanimated, Gesture Handler, SwiftUI, Jetpack Compose"),
-    ("Web", "React, Next.js, TanStack Query, Zustand, Tailwind CSS, Turborepo, i18n and RTL"),
-    ("Delivery", "Git, GitHub Actions, Azure Pipelines, fastlane, Xcode, Android Studio, App Store Connect, Play Console, AWS"),
-]
+resume = json.loads((root / "src/data/resume.json").read_text())
+experience = resume["experience"]
 
 # ---------------------------------------------------------------- story
 story = []
@@ -174,15 +109,7 @@ contact_bits = [
 story.append(Paragraph(" | ".join(contact_bits), styles["contact"]))
 
 story += section("Summary")
-story.append(
-    Paragraph(
-        safe(
-            "Senior React Native and frontend developer with 4+ years building iOS, Android, and web products in TypeScript. "
-            "Writes native Swift and Kotlin modules, has shipped 10+ apps to the App Store and Google Play, and maintains six open-source React Native packages."
-        ),
-        styles["body"],
-    )
-)
+story.append(Paragraph(safe(resume["summary"]), styles["body"]))
 
 story += section("Experience")
 for i, job in enumerate(experience):
@@ -197,28 +124,23 @@ for i, job in enumerate(experience):
         story.append(Spacer(1, 4))
 
 story += section("Open Source & Projects")
-for name, url, desc in projects:
+for project in resume["projects"]:
+    name, url = project["name"], project["url"]
     title = link(url, name) if url else safe(name)
-    story.append(Paragraph(f"<b>{title}</b>: {safe(desc)}", styles["bullet"], bulletText="•"))
+    story.append(Paragraph(f"<b>{title}</b>: {safe(project['description'])}", styles["bullet"], bulletText="•"))
 
 story += section("Skills")
-for label, value in skills:
-    story.append(Paragraph(f"<b>{safe(label)}:</b> {safe(value)}", styles["body"]))
+for skill in resume["skills"]:
+    story.append(Paragraph(f"<b>{safe(skill['label'])}:</b> {safe(skill['value'])}", styles["body"]))
 
 story += section("Education & Certifications")
-story.append(row("<b>ASAC</b>, British Diploma in Software Engineering", "Oct 2023"))
-story.append(row("<b>Amazon Web Services</b>, AWS re/Start Program", "Mar 2022 \u2013 Jul 2022"))
-story.append(
-    Paragraph(
-        "<b>Certifications:</b> AWS Cloud Practitioner; Udacity Mobile Development; "
-        "freeCodeCamp Front End Libraries, Responsive Web Design",
-        styles["body"],
-    )
-)
+for item in resume["education"]:
+    story.append(row(f"<b>{safe(item['org'])}</b>, {safe(item['title'])}", safe(item["dates"])))
+story.append(Paragraph(f"<b>Certifications:</b> {safe(resume['certifications'])}", styles["body"]))
 
 # ---------------------------------------------------------------- build
 filename = "Saleh_Al-Mashni_Resume_2026.pdf"
-output = root / "output/pdf" / filename
+output = root / "public" / filename
 doc = SimpleDocTemplate(
     str(output),
     pagesize=A4,
@@ -243,6 +165,4 @@ if pages > 2:
 text = "\n".join(page.extract_text() for page in reader.pages)
 for expected in ["Saleh", "EXPERIENCE", "SKILLS", "EDUCATION", "TGC", "Speedy Hire", "Aug 2026", "React Native", "react-native-rtl"]:
     assert expected.lower() in text.lower(), f"Missing expected content: {expected}"
-for destination in [root / filename, root / "public" / filename]:
-    shutil.copy2(output, destination)
-print(f"Created and checked {output} ({pages} page{'s' if pages > 1 else ''}); synchronized root and public copies.")
+print(f"Created and checked {output} ({pages} page{'s' if pages > 1 else ''}).")

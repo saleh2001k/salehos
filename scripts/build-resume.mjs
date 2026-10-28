@@ -1,4 +1,4 @@
-import { readFileSync, mkdirSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
@@ -19,7 +19,6 @@ async function loadData(name) {
 }
 const content = await loadData("content.ts");
 const { packages } = await loadData("packages.ts");
-mkdirSync(path.join(root, "output/pdf"), { recursive: true });
 const result = spawnSync(
   process.env.PORTFOLIO_PYTHON || "python3",
   [path.join(root, "scripts/build-resume.py"), root],

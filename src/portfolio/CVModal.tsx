@@ -1,8 +1,9 @@
-import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { Check, Download, ExternalLink, Link2, Mail, Minus, Plus, Share2, X } from "lucide-react";
+import { Check, Download, ExternalLink, Link2, Mail, Share2, X } from "lucide-react";
 import { site } from "../data/content";
 import { Modal } from "./Modal";
+import { CVDocument } from "./CVDocument";
 import { LinkedInIcon, WhatsAppIcon } from "./Icons";
 import { EASE } from "./motion";
 
@@ -10,11 +11,13 @@ type Origin = { el: HTMLElement; radius: number };
 const CVContext = createContext<(o: Origin) => void>(() => {});
 
 export function CVProvider({ children }: { children: ReactNode }) {
-  const [open, setOpen] = useState<Origin | null>(null);
+  const [open, setOpen] = useState<{ origin?: Origin } | null>(() =>
+    new URLSearchParams(window.location.search).has("cv") ? {} : null,
+  );
   return (
-    <CVContext.Provider value={setOpen}>
+    <CVContext.Provider value={(origin) => setOpen({ origin })}>
       {children}
-      <AnimatePresence>{open && <CVModal key="cv" origin={open} onClose={() => setOpen(null)} />}</AnimatePresence>
+      <AnimatePresence>{open && <CVModal key="cv" origin={open.origin} onClose={() => setOpen(null)} />}</AnimatePresence>
     </CVContext.Provider>
   );
 }
@@ -50,13 +53,11 @@ export function CVButton({
   );
 }
 
-const shareUrl = () => new URL(site.cv, window.location.origin).href;
+const shareUrl = () => new URL("/?cv=1", window.location.origin).href;
 
-function CVModal({ origin, onClose }: { origin: Origin; onClose: () => void }) {
-  const [zoom, setZoom] = useState(false);
+function CVModal({ origin, onClose }: { origin?: Origin; onClose: () => void }) {
   const [menu, setMenu] = useState(false);
   const [copied, setCopied] = useState<"idle" | "copied" | "failed">("idle");
-  const file = useRef<File | null>(null);
   useEffect(() => {
     if (copied === "idle") return;
     const t = window.setTimeout(() => setCopied("idle"), 2400);
@@ -65,22 +66,6 @@ function CVModal({ origin, onClose }: { origin: Origin; onClose: () => void }) {
 
   const canNativeShare = typeof navigator !== "undefined" && "share" in navigator;
   const title = `${site.name} — Résumé`;
-
-  // Fetch the PDF up front: Safari only allows share() straight from the tap,
-  // so there's no time to download it once the button is pressed.
-  useEffect(() => {
-    if (!canNativeShare) return;
-    let alive = true;
-    fetch(site.cv)
-      .then((r) => r.blob())
-      .then((b) => {
-        if (alive) file.current = new File([b], "Saleh_Al-Mashni_Resume_2026.pdf", { type: "application/pdf" });
-      })
-      .catch(() => {});
-    return () => {
-      alive = false;
-    };
-  }, [canNativeShare]);
 
   async function copyLink() {
     const url = shareUrl();
@@ -109,9 +94,7 @@ function CVModal({ origin, onClose }: { origin: Origin; onClose: () => void }) {
 
   function nativeShare() {
     setMenu(false);
-    const f = file.current;
-    const data: ShareData = f && navigator.canShare?.({ files: [f] }) ? { title, files: [f] } : { title, url: shareUrl() };
-    navigator.share(data).catch(() => {
+    navigator.share({ title, url: shareUrl() }).catch(() => {
       /* dismissed */
     });
   }
@@ -133,17 +116,17 @@ function CVModal({ origin, onClose }: { origin: Origin; onClose: () => void }) {
   ];
 
   return (
-    <Modal onClose={onClose} label="Résumé" origin={origin.el} originRadius={origin.radius} className="cv-modal">
+    <Modal onClose={onClose} label="Résumé" origin={origin?.el} originRadius={origin?.radius} className="cv-modal">
       <div className="cv-bar">
         <div className="cv-title">
           <span className="mono">(Résumé)</span>
           <strong>{site.name}</strong>
-          <small>One page · PDF · Updated October 2026</small>
+          <small>Updated October 2026</small>
         </div>
         <div className="cv-actions">
           <a className="pill-btn solid" href={site.cv} download data-autofocus>
             <Download size={15} />
-            <span>Download</span>
+            <span>Download PDF</span>
           </a>
           <div className="share-wrap">
             <button
@@ -207,32 +190,23 @@ function CVModal({ origin, onClose }: { origin: Origin; onClose: () => void }) {
               )}
             </AnimatePresence>
           </div>
-          <a className="icon-btn" href={site.cv} target="_blank" rel="noreferrer" aria-label="Open PDF in a new tab">
+          <a className="icon-btn" href={shareUrl()} target="_blank" rel="noreferrer" aria-label="Open résumé in a new tab">
             <ExternalLink size={16} />
           </a>
-          <button type="button" className="icon-btn" onClick={onClose} aria-label="Close résumé">
+          <button type="button" className="icon-btn cv-close" onClick={onClose} aria-label="Close résumé">
             <X size={17} />
           </button>
         </div>
       </div>
       <div className="cv-scroll">
-        <motion.button
-          type="button"
-          layout
-          className={`cv-paper ${zoom ? "is-zoomed" : ""}`}
-          onClick={() => setZoom(!zoom)}
-          aria-label={zoom ? "Zoom out" : "Zoom in"}
-          data-cursor={zoom ? "Zoom out" : "Zoom in"}
+        <motion.div
+          className="cv-paper"
           transition={{ type: "spring", stiffness: 260, damping: 30 }}
           initial={{ rotateX: 14, y: 50, opacity: 0 }}
           animate={{ rotateX: 0, y: 0, opacity: 1 }}
         >
-          <img src={site.cvPreview} alt="Page one of Saleh Al-Mashni's résumé" width="1200" height="1697" />
-        </motion.button>
-        <button type="button" className="cv-zoom-hint" onClick={() => setZoom(!zoom)}>
-          {zoom ? <Minus size={14} /> : <Plus size={14} />}
-          {zoom ? "Fit to window" : "Zoom in to read"}
-        </button>
+          <CVDocument />
+        </motion.div>
       </div>
     </Modal>
   );

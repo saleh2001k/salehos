@@ -7,6 +7,7 @@ import "@fontsource/instrument-serif/400.css";
 import "@fontsource/instrument-serif/400-italic.css";
 import { certificates, education, experience, site, skillGroups } from "../data/content";
 import { DotField, SnakeCard } from "./Arcade";
+import { FooterMark } from "./CanvasMarks";
 import ContactForm from "./ContactForm";
 import { CVButton, CVProvider } from "./CVModal";
 import { SiteHeader, socials } from "./Header";
@@ -482,6 +483,9 @@ function Footer() {
         >
           Back to top <ArrowUp size={13} />
         </a>
+      </div>
+      <div className="footer-mark-wrap" aria-hidden="true">
+        <FooterMark />
       </div>
       <div className="footer-name" aria-hidden="true" ref={name}>
         {"Saleh Al-Mashni".split("").map((ch, i) => (

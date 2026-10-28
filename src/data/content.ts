@@ -18,7 +18,6 @@ export interface SiteInfo {
   x: string;
   whatsapp: string;
   cv: string;
-  cvPreview: string;
   footerLine: string;
 }
 
@@ -88,7 +87,6 @@ export const site: SiteInfo = {
   x: "https://x.com/saleh_almashne",
   whatsapp: "https://wa.me/962799714069?text=Hi%20Saleh%2C%20I%20found%20your%20portfolio%20and%20wanted%20to%20reach%20out.",
   cv: "/Saleh_Al-Mashni_Resume_2026.pdf",
-  cvPreview: "/cv/page-1.webp",
   footerLine: "© 2026 Saleh Al-Mashni. Thoughtfully built in Jordan.",
 };
 
@@ -133,6 +131,7 @@ export const experience: ExperienceItem[] = [
       "Built QR and barcode asset inspection with VisionCamera and custom camera controls, plus biometric sign-in and OAuth (Azure AD B2C) token management stored in Keychain.",
       "Wrote native iOS and Android modules for splash-screen choreography and in-app restart; added a dark theme with Unistyles and native theme transitions; upgraded React Native 0.81 to 0.85.",
       "Persisted server state with TanStack Query, implemented deep linking, and automated builds with Azure Pipelines and fastlane.",
+      "Interviewed mid-level and junior candidates for mobile roles.",
     ],
   },
   {

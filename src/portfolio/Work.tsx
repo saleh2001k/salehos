@@ -11,7 +11,9 @@ import {
   type MotionValue,
 } from "motion/react";
 import { ArrowUpRight, Layers3, Monitor, Plus, Smartphone } from "lucide-react";
+import Ripple from "../components/canvasui/Ripple";
 import { projects } from "../data/content";
+import { SalehOsAscii } from "./CanvasMarks";
 import { AutoHeight, EASE, EASE_IN_OUT, Reveal, RevealText, SectionHead } from "./motion";
 import { leaveTo } from "./navigation";
 import { ProjectCover, slugOf, useProjectModal } from "./ProjectModal";
@@ -621,7 +623,21 @@ export default function SelectedWork() {
 
       <div className="independent-projects">
         <Reveal as="article" className="independent-project">
-          <ProjectCover title="MacHarmony" src="/projects/macharmony/home.webp" alt="MacHarmony storage-cleaner dashboard" />
+          <Ripple
+            className="cover-ripple"
+            amplitude={0.6}
+            speed={0.62}
+            wavelength={70}
+            rings={2}
+            decay={1.15}
+            shine={0.9}
+            refraction={90}
+            dispersion={0.35}
+            trigger="click"
+            interval={0}
+          >
+            <ProjectCover title="MacHarmony" src="/projects/macharmony/home.webp" alt="MacHarmony storage-cleaner dashboard" />
+          </Ripple>
           <div className="project-title">
             <h3>MacHarmony</h3>
             <span className="mono">Native macOS app</span>
@@ -642,8 +658,8 @@ export default function SelectedWork() {
               leaveTo("/os", "SalehOS");
             }}
           >
-            <span className="cover-media">
-              <img src="/projects/salehos.jpg" alt="SalehOS browser desktop with dock and windows" loading="lazy" />
+            <span className="cover-media ascii-cover">
+              <SalehOsAscii />
             </span>
             <span className="image-action">
               <ArrowUpRight size={18} />

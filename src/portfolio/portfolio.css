@@ -1253,6 +1253,31 @@ html[data-experience="resume"] body {
 .project-cover:hover .cover-media img {
   transform: scale(1.05);
 }
+.cover-ripple {
+  border-radius: 16px;
+  overflow: hidden;
+}
+.cover-ripple > div {
+  height: auto !important;
+  overflow: visible !important;
+}
+.cover-ripple canvas {
+  pointer-events: none;
+}
+.ascii-cover {
+  background: #121212;
+}
+.ascii-cover .ascii-stage {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.9s var(--ease);
+}
+.ascii-cover canvas {
+  pointer-events: none;
+}
+.project-cover:hover .ascii-stage {
+  transform: scale(1.04);
+}
 .layer-switcher,
 .segmented {
   display: inline-flex;
@@ -3747,10 +3772,22 @@ html[data-experience="resume"] body {
   gap: 6px;
   color: var(--invert-ink);
 }
+.footer-mark-wrap {
+  width: 176px;
+  height: 120px;
+  margin: 28px auto 0;
+}
+.footer-mark-wrap .footer-mark {
+  width: 100%;
+  height: 100%;
+}
+.footer-mark-wrap canvas {
+  pointer-events: none;
+}
 .footer-name {
   display: flex;
   justify-content: center;
-  margin-top: clamp(24px, 3vw, 44px);
+  margin-top: clamp(8px, 1.2vw, 16px);
   padding-bottom: clamp(18px, 2.4vw, 36px);
   font-size: clamp(44px, 10.6vw, 168px);
   font-weight: 600;
@@ -3911,32 +3948,113 @@ html[data-experience="resume"] body {
   perspective: 1200px;
 }
 .cv-paper {
-  width: min(100%, 640px);
+  width: min(100%, 820px);
   flex-shrink: 0;
-  border-radius: 6px !important;
-  overflow: hidden;
+  border-radius: 6px;
   background: #fff;
+  color: #171717;
+  color-scheme: light;
   box-shadow:
     0 1px 2px rgb(0 0 0 / 0.08),
     0 30px 60px -30px rgb(0 0 0 / 0.4);
-  cursor: zoom-in !important;
 }
-.cv-paper.is-zoomed {
-  width: 1200px;
-  max-width: none;
-  cursor: zoom-out !important;
+.cv-document {
+  padding: clamp(20px, 5vw, 48px);
+  font-size: 15px;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
 }
-.cv-paper img {
-  display: block;
-  width: 100%;
-  height: auto;
+.cv-document ::selection {
+  background: #171717;
+  color: #fff;
 }
-.cv-zoom-hint {
-  display: inline-flex !important;
-  align-items: center;
-  gap: 6px;
+.cv-document :focus-visible {
+  outline-color: #171717;
+}
+.cv-document a {
+  text-decoration: underline;
+  text-decoration-color: #b8b8b8;
+  text-underline-offset: 3px;
+}
+.cv-document a:hover {
+  text-decoration-color: currentColor;
+}
+.cv-document-header {
+  text-align: center;
+}
+.cv-document h1 {
+  font-size: clamp(26px, 5vw, 36px);
+  font-weight: 650;
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+  margin-bottom: 10px;
+}
+.cv-document .cv-contact {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin-top: 12px;
   font-size: 13px;
-  color: var(--muted) !important;
+  list-style: none;
+  padding: 0;
+}
+.cv-document section {
+  margin-top: 28px;
+}
+.cv-document h2 {
+  border-bottom: 1px solid #d4d4d0;
+  padding-bottom: 6px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.cv-document h3 {
+  font-size: inherit;
+  font-weight: 650;
+}
+.cv-document-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 2px 18px;
+}
+.cv-document-row > :first-child {
+  flex: 1 1 240px;
+}
+.cv-document-row > span {
+  font-size: 13px;
+  color: #525252;
+}
+.cv-job + .cv-job {
+  margin-top: 20px;
+}
+.cv-job-role {
+  margin: 2px 0 8px;
+}
+.cv-job-role p {
+  font-style: italic;
+}
+.cv-document ul {
+  padding-left: 20px;
+  list-style: disc;
+}
+.cv-document li + li,
+.cv-skills > div + div {
+  margin-top: 6px;
+}
+.cv-document .cv-contact li {
+  margin: 0;
+}
+.cv-skills dt,
+.cv-skills dd {
+  display: inline;
+}
+.cv-skills dt {
+  font-weight: 650;
 }
 
 /* Project gallery */
@@ -4466,6 +4584,20 @@ html[data-experience="resume"] body {
   }
   .cv-actions .pill-btn {
     flex: 1;
+    padding: 0 8px;
+    gap: 6px;
+    font-size: 13px;
+  }
+  .cv-actions {
+    flex-wrap: wrap;
+  }
+  .cv-title {
+    padding-right: 42px;
+  }
+  .cv-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
   }
   .cv-scroll {
     padding: 14px;
